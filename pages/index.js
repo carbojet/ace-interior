@@ -2,7 +2,7 @@ import { Heading, Page } from "@shopify/polaris";
 
 const Index = () => (
   <Page>
-    <Heading>Heroku Shopify app with Node and React 🎉</Heading>
+    <Heading>Axios Heroku Shopify app with Node and React 🎉</Heading>
   </Page>
 );
 
