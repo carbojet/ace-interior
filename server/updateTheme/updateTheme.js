@@ -19,5 +19,6 @@ async function getThemeId(axios){
         return
     }
     console.log('the main theme is',mainTheme)
+    console.log('the main theme is',mainTheme)
     console.log('The theme id is :',mainTheme.id)
 }
