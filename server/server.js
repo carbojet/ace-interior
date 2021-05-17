@@ -49,7 +49,7 @@ app.prepare().then(async () => {
           webhookHandler: async (topic, shop, body) =>
             delete ACTIVE_SHOPIFY_SHOPS[shop],
         });
-
+        console.log("testing")
         if (!response.success) {
           console.log(
             `Failed to register APP_UNINSTALLED webhook: ${response.result}`
