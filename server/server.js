@@ -6,6 +6,8 @@ import Shopify, { ApiVersion } from "@shopify/shopify-api";
 import Koa from "koa";
 import next from "next";
 import Router from "koa-router";
+import fs from "fs";
+import { Session } from "@shopify/shopify-api/dist/auth/session";
 import {updateTheme} from "./updateTheme/updateTheme";
 
 dotenv.config();
