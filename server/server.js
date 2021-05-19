@@ -16,6 +16,32 @@ const app = next({
 });
 const handle = app.getRequestHandler();
 
+const FILENAME = "./session.json";
+function storeCallback(session) {
+  console.log("storeCallback ");
+  fs.writeFileSync(FILENAME, JSON.stringify(session));
+  return true;
+}
+
+function loadCallback(id) {
+  console.log("loadCallback ");
+  if (fs.existsSync(FILENAME)) {
+    const sessionResult = fs.readFileSync(FILENAME, "utf8");
+    return Object.assign(new Session(), JSON.parse(sessionResult));
+  }
+  return false;
+}
+
+function deleteCallback(id) {
+  console.log("deleteCallback", id);
+}
+
+const sessionStorage = new Shopify.Session.CustomSessionStorage(
+  storeCallback,
+  loadCallback,
+  deleteCallback
+);
+
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
@@ -50,12 +76,14 @@ app.prepare().then(async () => {
           webhookHandler: async (topic, shop, body) =>
             delete ACTIVE_SHOPIFY_SHOPS[shop],
         });
-        updateTheme(shop,accessToken);
+        
         if (!response.success) {
           console.log(
             `Failed to register APP_UNINSTALLED webhook: ${response.result}`
           );
         }
+
+        updateTheme(shop,accessToken);
 
         // Redirect to app with shop parameter upon auth
         ctx.redirect(`/?shop=${shop}`);
