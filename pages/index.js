@@ -1,7 +1,5 @@
 import { Heading, Page } from "@shopify/polaris";
 import React,{ Component } from 'react';
-import axios from 'axios';
-import { useAppBridge } from "@shopify/app-bridge-react";
 import { getSessionToken } from "@shopify/app-bridge-utils";
 export default class Index extends Component{
 
@@ -13,8 +11,7 @@ export default class Index extends Component{
   }
   componentDidMount(){
       try{    
-        const app = useAppBridge(); 
-        return getSessionToken(app)
+        return getSessionToken(Window.app)
         .then((token) => {
           console.log(token)
         })
