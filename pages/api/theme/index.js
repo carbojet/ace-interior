@@ -12,7 +12,7 @@ export default async (req,res) => {
                 const response = await axios({
                   headers: {
                     "Content-Type": "application/json",
-                    "X-Shopify-Access-Token": accessToken,
+                    "Authorization": accessToken,
                   },
                   url: "/themes.json",
                   method: "GET",
