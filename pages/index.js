@@ -14,8 +14,11 @@ export default class Index extends Component{
   componentDidMount(){
       try{    
         const app = useAppBridge(); 
-        const session = getSessionToken(app);
-        console.log(session)    
+        return getSessionToken(app)
+        .then((token) => {
+          console.log(token)
+        })
+          
           // this.authAxios.get('/api/theme').then(result=>{
           //   console.log(result)
           // }).catch(error => {console.log(error)})
