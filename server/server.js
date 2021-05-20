@@ -6,9 +6,6 @@ import Shopify, { ApiVersion } from "@shopify/shopify-api";
 import Koa from "koa";
 import next from "next";
 import Router from "koa-router";
-import fs from "fs";
-import { Session } from "@shopify/shopify-api/dist/auth/session";
-import {updateTheme} from "./updateTheme/updateTheme";
 
 dotenv.config();
 const port = parseInt(process.env.PORT, 10) || 8081;
@@ -17,32 +14,6 @@ const app = next({
   dev,
 });
 const handle = app.getRequestHandler();
-
-const FILENAME = "./session.json";
-function storeCallback(session) {
-  console.log("storeCallback ");
-  fs.writeFileSync(FILENAME, JSON.stringify(session));
-  return true;
-}
-
-function loadCallback(id) {
-  console.log("loadCallback ");
-  if (fs.existsSync(FILENAME)) {
-    const sessionResult = fs.readFileSync(FILENAME, "utf8");
-    return Object.assign(new Session(), JSON.parse(sessionResult));
-  }
-  return false;
-}
-
-function deleteCallback(id) {
-  console.log("deleteCallback", id);
-}
-
-const sessionStorage = new Shopify.Session.CustomSessionStorage(
-  storeCallback,
-  loadCallback,
-  deleteCallback
-);
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -69,7 +40,8 @@ app.prepare().then(async () => {
         // Access token and shop available in ctx.state.shopify
         const { shop, accessToken, scope } = ctx.state.shopify;
         ACTIVE_SHOPIFY_SHOPS[shop] = scope;
-
+        ctx.cookies.set('shopOrigin', shop, { httpOnly:false, secure: true, sameSite:'none' });
+        ctx.cookies.set('accessToken', accessToken, { httpOnly:false, secure: true, sameSite:'none' });
         const response = await Shopify.Webhooks.Registry.register({
           shop,
           accessToken,
@@ -84,8 +56,6 @@ app.prepare().then(async () => {
             `Failed to register APP_UNINSTALLED webhook: ${response.result}`
           );
         }
-
-        updateTheme(shop,accessToken);
 
         // Redirect to app with shop parameter upon auth
         ctx.redirect(`/?shop=${shop}`);
