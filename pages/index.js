@@ -1,9 +1,11 @@
 import { Heading, Page } from "@shopify/polaris";
-
-const Index = () => (
-  <Page>
-    <Heading>Axios Heroku Shopify app with Node and React 🎉</Heading>
-  </Page>
-);
-
-export default Index;
+import React,{ Component } from 'react';
+export default class Index extends Component{
+  render(){
+    return(
+      <Page>
+      <Heading>Axios Heroku Shopify app with Node and React 🎉</Heading>
+    </Page>
+    )
+  }  
+}
