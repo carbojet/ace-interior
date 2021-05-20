@@ -3,15 +3,15 @@ import React,{ Component } from 'react';
 import axios from 'axios';
 export default class Index extends Component{
 
-  constructor(props,authAxios) {
+  constructor(props) {
       super(props)  
       this.state = {
-         theme:null
+         theme:null,
       }
   }
   componentDidMount(){
-      try{
-          authAxios.get('/api/theme').then(result=>{
+      try{          
+          this.authAxios.get('/api/theme').then(result=>{
             console.log(result)
           }).catch(error => {console.log(error)})
       }catch(error){
