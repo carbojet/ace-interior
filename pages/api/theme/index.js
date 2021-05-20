@@ -12,7 +12,7 @@ export default async (req,res) => {
                 const response = await axios({
                   headers: {
                     "Content-Type": "application/json",
-                    "Authorization": accessToken,
+                    "Authorization": `Bearer ${accessToken}`,
                   },
                   url: "/themes.json",
                   method: "GET",
