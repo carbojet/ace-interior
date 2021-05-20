@@ -37,7 +37,7 @@ function MyProvider(props) {
   // Create axios instance for authenticated request
   const authAxios = axios.create();
   // intercept all requests on this axios instance
-  authAxios.interceptors.request.use(function (config) {
+  authAxios.interceptors.request.get(function (config) {
     return getSessionToken(app)
       .then((token) => {
         // append your request headers with an authenticated token
