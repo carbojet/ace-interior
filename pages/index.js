@@ -1,5 +1,6 @@
 import { Heading, Page } from "@shopify/polaris";
 import React,{ Component } from 'react';
+import axios from 'axios';
 
 export default class Index extends Component{
 
