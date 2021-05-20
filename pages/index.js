@@ -1,10 +1,9 @@
 import { Heading, Page } from "@shopify/polaris";
 import React,{ Component } from 'react';
 import axios from 'axios';
-
 export default class Index extends Component{
 
-  constructor(props) {
+  constructor(props,authAxios) {
       super(props)  
       this.state = {
          theme:null
@@ -12,22 +11,14 @@ export default class Index extends Component{
   }
   componentDidMount(){
       try{
-          const response = axios({
-              url:'/api/theme',
-              method:'GET',         
-
-          }).then((response) =>{
-              
-            this.setState({
-                theme:response
-            })
-          })
+          authAxios.get('/api/theme').then(result=>{
+            console.log(result)
+          }).catch(error => {console.log(error)})
       }catch(error){
           console.log(error)
       }
   }
   render(){
-    console.log(this.state.theme)
     return(
       <Page>
         <Heading>Axios Heroku Shopify app with Node and React 🎉</Heading>

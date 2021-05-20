@@ -7,6 +7,7 @@ import { authenticatedFetch } from "@shopify/app-bridge-utils";
 import { Redirect } from "@shopify/app-bridge/actions";
 import "@shopify/polaris/dist/styles.css";
 import translations from "@shopify/polaris/locales/en.json";
+import axios from 'axios';
 
 function userLoggedInFetch(app) {
   const fetchFunction = authenticatedFetch(app);
@@ -33,6 +34,18 @@ function userLoggedInFetch(app) {
 function MyProvider(props) {
   const app = useAppBridge();
 
+  // Create axios instance for authenticated request
+  const authAxios = axios.create();
+  // intercept all requests on this axios instance
+  authAxios.interceptors.request.use(function (config) {
+    return getSessionToken(app)
+      .then((token) => {
+        // append your request headers with an authenticated token
+        config.headers["Authorization"] = `Bearer ${token}`;
+        return config;
+      });
+  });
+
   const client = new ApolloClient({
     fetch: userLoggedInFetch(app),
     fetchOptions: {
@@ -44,7 +57,7 @@ function MyProvider(props) {
 
   return (
     <ApolloProvider client={client}>
-      <Component {...props} />
+      <Component {...props} authAxios={authAxios} />
     </ApolloProvider>
   );
 }
