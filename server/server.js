@@ -21,7 +21,7 @@ Shopify.Context.initialize({
   SCOPES: process.env.SCOPES.split(","),
   HOST_NAME: process.env.HOST.replace(/https:\/\//, ""),
   API_VERSION: ApiVersion.October20,
-  IS_EMBEDDED_APP: true,
+  IS_EMBEDDED_APP: false,
   // This should be replaced with your preferred storage strategy
   SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
 });
@@ -40,8 +40,7 @@ app.prepare().then(async () => {
         // Access token and shop available in ctx.state.shopify
         const { shop, accessToken, scope } = ctx.state.shopify;
         ACTIVE_SHOPIFY_SHOPS[shop] = scope;
-        ctx.cookies.set('shopOrigin', shop, { httpOnly:false, secure: true, sameSite:'none' });
-        ctx.cookies.set('accessToken', accessToken, { httpOnly:false, secure: true, sameSite:'none' });
+        /*
         const response = await Shopify.Webhooks.Registry.register({
           shop,
           accessToken,
@@ -56,9 +55,9 @@ app.prepare().then(async () => {
             `Failed to register APP_UNINSTALLED webhook: ${response.result}`
           );
         }
-
+        */
         // Redirect to app with shop parameter upon auth
-        ctx.redirect(`/?shop=${shop}`);
+        ctx.redirect(`/`);
       },
     })
   );
@@ -100,6 +99,7 @@ app.prepare().then(async () => {
   router.get("(/_next/static/.*)", handleRequest); // Static content is clear
   router.get("/_next/webpack-hmr", handleRequest); // Webpack content is clear
   router.get("(.*)", verifyRequest(), handleRequest); // Everything else must have sessions
+  
 
   server.use(router.allowedMethods());
   server.use(router.routes());
